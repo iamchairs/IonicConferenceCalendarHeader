@@ -6,6 +6,10 @@
     "watch": "tsc -w",
     "build": "rm -rf lib && tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamchairs/ionic-conference-calendar-header.git"
+  },
   "keywords": [
     "Ionic",
     "Event",
@@ -16,6 +20,10 @@
   ],
   "author": "micahwllmsn@gmail.com",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamchairs/ionic-conference-calendar-header/issues"
+  },
+  "homepage": "https://github.com/iamchairs/ionic-conference-calendar-header#readme",
   "devDependencies": {
     "typescript": "^2.4.0"
   },
