@@ -12,7 +12,7 @@ Install
 
 
 ```
-npm install https://www.npmjs.com/package/ionic-conference-calendar-header
+npm install ionic-conference-calendar-header
 ```
 
 Add component to declarations

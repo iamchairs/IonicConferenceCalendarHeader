@@ -1,6 +1,6 @@
 {
   "name": "ionic-conference-calendar-header",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple conference calendar header component for ionic",
   "scripts": {
     "watch": "tsc -w",
