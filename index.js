@@ -1,0 +1,1 @@
+exports.IonicConferenceCalendarHeader = require('./lib/IonicConferenceCalendarHeader').IonicConferenceCalendarHeader;

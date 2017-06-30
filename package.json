@@ -1,0 +1,36 @@
+{
+  "name": "ionic-conference-calendar-header",
+  "version": "1.0.0",
+  "description": "A simple conference calendar header component for ionic",
+  "scripts": {
+    "watch": "tsc -w",
+    "build": "rm -rf lib && tsc"
+  },
+  "keywords": [
+    "Ionic",
+    "Event",
+    "Conference",
+    "Header",
+    "Datepicker",
+    "Calendar"
+  ],
+  "author": "micahwllmsn@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.4.0"
+  },
+  "dependencies": {
+    "@angular/common": "^4.1.3",
+    "@angular/compiler": "^4.1.3",
+    "@angular/compiler-cli": "^4.1.3",
+    "@angular/core": "^4.1.3",
+    "@angular/forms": "^4.1.3",
+    "@angular/http": "^4.1.3",
+    "@angular/platform-browser": "^4.1.3",
+    "@angular/platform-browser-dynamic": "^4.1.3",
+    "moment": "^2.18.1",
+    "ionic-angular": "3.4.2",
+    "rxjs": "5.4.0",
+    "zone.js": "0.8.12"
+  }
+}

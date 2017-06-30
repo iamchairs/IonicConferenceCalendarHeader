@@ -1,0 +1,57 @@
+@import 'theme/variables';
+
+.header-calendar-wrapper {
+  text-align: center;
+
+  //background-color: $toolbar-background;
+
+  color: $toolbar-text-color;
+
+  .month {
+    font-size: 2em;
+  }
+
+  .year {
+    margin-top: .5em;
+  }
+
+  .day-wrapper {
+    width: 100%;
+
+    height: 7em;
+
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    .day-slider {
+
+      margin: 1em 0;
+
+      .day-slider-padding {
+        float: left;
+
+        height: 10px;
+        width: calc(50vw - 64px);
+      }
+
+      .day {
+        float: left;
+
+        width: 64px;
+        height: 64px;
+        line-height: 64px;
+
+        margin: 0px 32px;
+
+        font-size: 1.5em;
+
+        border-radius: 50px;
+
+        &.active {
+          background-color: $toolbar-text-color;
+          color: $toolbar-background;
+        }
+      }
+    }
+  }
+}
