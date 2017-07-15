@@ -289,8 +289,7 @@ export class IonicConferenceCalendarHeader {
         {
           text: 'Done',
           handler: (data: any) => {
-            console.log(data);
-            this.setActiveMonth(data.Month.value, data.Year.value);
+            this.setActiveMonth(data.Month.value, data.Year ? data.Year.value : this.years[0].year);
           }
         }
       ]
