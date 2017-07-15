@@ -62,7 +62,7 @@ Import the stylesheet
 |----------|--------|----------------------|-------------------------------------------------------------------------------------------------------|------------------------------------------------------|
 | [Input]  | date   | string \| Date        | The date to select in the header. The date must already exist in the given [dates].                   | "2018-01-01" | new Date()                            |
 | [Input]  | dates  | Array\<string \| Date\> | All of the possible dates.                                                                            | ["2018-01-01", "2018-01-02", new Date(), new Date()] |
-| (Output) | change | Date                 | Emitted when the component changes day or month. This event will emit when the component initializes. |                                                      |
+| (Output) | change | string                |  | "2018-01-01"                                                     |
 
 
 ## Notes
