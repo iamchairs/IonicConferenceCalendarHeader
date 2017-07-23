@@ -1,24 +1,28 @@
 <div class="header-calendar-wrapper">
 
   <div (click)="openDatePicker()">
-    <div class="month">{{getMonthName(activeMonth)}}</div>
+    <div class="month">{{getMonthName()}}</div>
+    <div class="year">{{activeYear}}</div>
   </div>
 
-  <div #dayWrapper class="day-wrapper">
+  <div #selectionWrapper class="day-wrapper">
 
     <div #daySlider
-          [style.width]="getSliderWidth() + 'px'"
-          class="day-slider">
+         *ngIf="years.length"
+         [style.width]="getSliderWidth() + 'px'"
+         class="selection-slider">
 
-      <div class="day-slider-padding"></div>
+      <div class="selection-slider-padding"></div>
 
-      <div #day 
-            *ngFor="let d of getDaysInMonth(activeMonth)"
-            [ngClass]="{active: d == activeDay}"
-            (click)="setActiveDay(d)"
-            class="day">{{d}}</div>
+      <div #selection 
+           *ngFor="let d of getDaysInMonth()"
+           [ngClass]="{active: d == activeDay}"
+           (click)="setActiveDay(d)"
+           class="selection">
+           {{d}}
+      </div>
 
-      <div class="day-slider-padding"></div>
+      <div class="selection-slider-padding"></div>
             
     </div>
 

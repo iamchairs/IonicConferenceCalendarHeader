@@ -2,7 +2,9 @@
 
 A sweet conference style calendar.
 
-![alt text](https://github.com/iamchairs/ionic-conference-calendar-header/raw/master/ioniceventheader.gif "demo")
+![default days view](https://github.com/iamchairs/ionic-conference-calendar-header/raw/master/ioniceventheader.gif "demo")
+
+![months view](https://github.com/iamchairs/ionic-conference-calendar-header/raw/master/ioniceventheadermonths.gif "demo")
 
 
 ## Setup
@@ -62,9 +64,5 @@ Import the stylesheet
 |----------|--------|----------------------|-------------------------------------------------------------------------------------------------------|------------------------------------------------------|
 | [Input]  | date   | string \| Date        | The date to select in the header. The date must already exist in the given [dates].                   | "2018-01-01" | new Date()                            |
 | [Input]  | dates  | Array\<string \| Date\> | All of the possible dates.                                                                            | ["2018-01-01", "2018-01-02", new Date(), new Date()] |
+| [Input]   | view  | string | Optional view type setting. Possible values are "days" and "months". Defaults to **days** | "days" | "months" |
 | (Output) | change | string                |  | "2018-01-01"                                                     |
-
-
-## Notes
-
-If you know of a better way to package ng components send me a message. I don't like that sass has to import from node_modules and I don't like that I can't use a separate template file. My component uses `template` instead of `templateUrl`.

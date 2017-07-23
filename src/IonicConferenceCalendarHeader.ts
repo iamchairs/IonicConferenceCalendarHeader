@@ -5,6 +5,9 @@ import { PickerController, PickerColumn, Picker } from 'ionic-angular';
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                     'August', 'September', 'October', 'November', 'December']
 
+const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+                    'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+
 interface IEventYear {
   year: number;
   months: IEventMonth[];
@@ -24,28 +27,46 @@ interface IEventMonth {
 <div class="header-calendar-wrapper">
 
   <div (click)="openDatePicker()">
-    <div class="month">{{getMonthName()}}</div>
-    <div class="year">{{activeYear}}</div>
+    <div *ngIf="viewType === 'days';else month_datepicker_view">
+      <div class="datepicker-headline">{{getMonthName()}}</div>
+      <div class="datepicker-subline">{{activeYear}}</div>
+    </div>
+
+    <ng-template #month_datepicker_view>
+      <div class="datepicker-headline">{{activeYear}}</div>
+    </ng-template>
   </div>
 
-  <div #dayWrapper class="day-wrapper">
+  <div #selectionWrapper class="selection-wrapper">
 
-    <div #daySlider
+    <div #selectionSlider
          *ngIf="years.length"
          [style.width]="getSliderWidth() + 'px'"
-         class="day-slider">
+         class="selection-slider">
 
-      <div class="day-slider-padding"></div>
+      <div class="selection-slider-padding"></div>
 
-      <div #day 
-           *ngFor="let d of getDaysInMonth()"
-           [ngClass]="{active: d == activeDay}"
-           (click)="setActiveDay(d)"
-           class="day">
-           {{d}}
+      <div *ngIf="viewType === 'days';else month_selection_view">
+        <div #selection 
+            *ngFor="let d of getDaysInMonth()"
+            [ngClass]="{active: d == activeDay}"
+            (click)="setActiveDay(d)"
+            class="selection">
+            {{d}}
+        </div>
       </div>
 
-      <div class="day-slider-padding"></div>
+      <ng-template #month_selection_view>
+        <div #selection
+            *ngFor="let m of getMonthsInYear()"
+            [ngClass]="{active: m == activeMonth}"
+            (click)="setActiveMonth(m)"
+            class="selection">
+            {{getMonthShortName(m)}}
+        </div>
+      </ng-template>
+
+      <div class="selection-slider-padding"></div>
             
     </div>
 
@@ -58,7 +79,7 @@ export class IonicConferenceCalendarHeader {
 
   private margin: number = 0.5;
 
-  private dayWidth: number = 64;
+  private selectionWidth: number = 64;
 
   private years: IEventYear[] = [];
 
@@ -80,11 +101,13 @@ export class IonicConferenceCalendarHeader {
 
   @Input('date') date: string | Date;
 
-  @ViewChild('dayWrapper') dayWrapper: ElementRef;
+  @Input('view') viewType: 'days' | 'months' = 'days';
 
-  @ViewChild('daySlider') daySlider: ElementRef;
+  @ViewChild('selectionWrapper') selectionWrapper: ElementRef;
 
-  @ViewChildren('day') days: QueryList<ElementRef>;
+  @ViewChild('selectionSlider') selectionSlider: ElementRef;
+
+  @ViewChildren('selection') selections: QueryList<ElementRef>;
 
   constructor(private pickerController: PickerController) {}
 
@@ -121,11 +144,18 @@ export class IonicConferenceCalendarHeader {
   }
 
   public getSliderWidth(): number {
-    var dayWrapperWidth = (<HTMLDivElement>this.dayWrapper.nativeElement).offsetWidth;
+    var selectionWrapperWidth = (<HTMLDivElement>this.selectionWrapper.nativeElement).offsetWidth;
 
-    var numDays = this.getDaysInMonth(this.activeMonth).length;
+    let possibleSelections = 0;
 
-    return Math.max((dayWrapperWidth + this.dayWidth+(this.dayWidth*this.margin)) * numDays);
+    if(this.viewType === 'days') {
+      possibleSelections = this.getDaysInMonth().length;
+    } else {
+      possibleSelections = this.getMonthsInYear().length;
+    }
+    
+
+    return Math.max((selectionWrapperWidth + this.selectionWidth+(this.selectionWidth*this.margin)) * possibleSelections);
   }
 
   /**
@@ -219,6 +249,10 @@ export class IonicConferenceCalendarHeader {
     });
   }
 
+  public getMonthsInYear(y: number = this.activeYear): number[] {
+    return this.getYear(y).months.map(m => m.month);
+  }
+
   public getDaysInMonth(m: number = this.activeMonth, y: number = this.activeYear) : number[] {
     return this.getMonth(m, y).days;
   }
@@ -254,18 +288,28 @@ export class IonicConferenceCalendarHeader {
     this.activeMonth = m;
     this.activeDay = d;
 
-    this.updateDayScrollPosition();
+    this.updateSelectionScrollPosition();
 
     if(emitEvent) {
-      this.change.emit(this.getDateString());
+      let ds = this.getDateString();
+      console.log(ds);
+      this.change.emit(ds);
     }
   }
 
-  public updateDayScrollPosition() {
-    if(this.days) {
-      var idx = this.getMonth().days.indexOf(this.activeDay);
-      var day = this.days.toArray()[idx];
-      let offset = (<HTMLDivElement>day.nativeElement).offsetLeft - this.dayWrapper.nativeElement.offsetWidth/2 + this.dayWidth/2;
+  public getSelectionIndex() {
+    if(this.viewType === 'days') {
+      return this.getDaysInMonth().indexOf(this.activeDay);
+    } else {
+      return this.getMonthsInYear().indexOf(this.activeMonth);
+    }
+  }
+
+  public updateSelectionScrollPosition() {
+    if(this.selections) {
+      let idx = this.getSelectionIndex();
+      var day = this.selections.toArray()[idx];
+      let offset = (<HTMLDivElement>day.nativeElement).offsetLeft - this.selectionWrapper.nativeElement.offsetWidth/2 + this.selectionWidth/2;
 
       this.scrollTo(offset);
     }
@@ -275,9 +319,24 @@ export class IonicConferenceCalendarHeader {
     return monthNames[m];
   }
 
+  public getMonthShortName(m: number = this.activeMonth) {
+    return monthShortNames[m];
+  }
+
   public openDatePicker() {
 
     this.updatePickerMonthOptions(this.years[0].year);
+
+    // Short circuit if no meaningful options exist
+    if(this.viewType === 'days') {
+      if(this.years.length < 2 && this.pickerMonthColumn.options.length < 2) {
+        return;
+      }
+    } else {
+      if(this.years.length < 2) {
+        return;
+      }
+    }
 
     let columns: PickerColumn[] = [];
 
@@ -285,7 +344,9 @@ export class IonicConferenceCalendarHeader {
       columns.push(this.pickerYearColumn);
     }
 
-    columns.push(this.pickerMonthColumn);
+    if(this.viewType === 'days') {
+      columns.push(this.pickerMonthColumn);
+    }
 
     var picker = this.pickerController.create({
       columns: columns,
@@ -297,42 +358,47 @@ export class IonicConferenceCalendarHeader {
         {
           text: 'Done',
           handler: (data: any) => {
-            this.setActiveMonth(data.Month.value, data.Year ? data.Year.value : this.years[0].year);
+            if(data.Month) {
+              this.setActiveMonth(data.Month.value, data.Year ? data.Year.value : this.years[0].year);
+            } else {
+              this.setActiveMonth(this.getMonthsInYear(data.Year.value)[0], data.Year.value);
+            }
           }
         }
       ]
     });
 
-    let yr = this.years[0].year;
+    if(this.viewType === 'days') {
+      let yr = this.years[0].year;
 
-    /**
-     * July, 15 2017
-     * 
-     * Hacked the shit out of this. As of this date, current ControlPicker does not support dynamic column items.
-     * If they update this, this should be unhacked.
-     * 
-     * Didn't mean to introduce lavaflow this early.
-     */
+      /**
+       * July, 15 2017
+       * 
+       * Hacked the shit out of this. As of this date, current ControlPicker does not support dynamic column items.
+       * If they update this, this should be unhacked.
+       * 
+       * Didn't mean to introduce lavaflow this early.
+       */
 
-    picker.ionChange.subscribe((change) => {
-      if(change.Year && change.Year.value !== yr) {
+      picker.ionChange.subscribe((change) => {
+        if(change.Year && change.Year.value !== yr) {
 
-        yr = change.Year.value;
+          yr = change.Year.value;
 
-        this.updatePickerMonthOptions(yr);
+          this.updatePickerMonthOptions(yr);
 
-        setTimeout(() => {
-          (<any>picker)._cmp._component._cols._results.forEach(r => {
-            r.col.prevSelected = null
+          setTimeout(() => {
+            (<any>picker)._cmp._component._cols._results.forEach(r => {
+              r.col.prevSelected = null
+            });
+
+            picker.refresh();
           });
-
-          picker.refresh();
-        });
-      }
-    });
+        }
+      });
+    }
 
     picker.present();
-    
 
     setTimeout(() => {
       (<any>picker)._cmp._component._cols._results.forEach(r => {
@@ -371,7 +437,7 @@ export class IonicConferenceCalendarHeader {
   }
 
   private scrollTo(to) {
-    var ele = <HTMLDivElement>this.dayWrapper.nativeElement;
+    var ele = <HTMLDivElement>this.selectionWrapper.nativeElement;
 
     ele.scrollLeft = to;
   }
