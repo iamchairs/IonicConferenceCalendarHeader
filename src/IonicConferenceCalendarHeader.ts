@@ -179,7 +179,15 @@ export class IonicConferenceCalendarHeader {
         month.days.push(nDay);
       }
 
-      month.days = month.days.sort();
+      month.days = month.days.sort((a, b) => {
+        if(a > b) {
+          return 1;
+        } else if (b > a) {
+          return -1;
+        }
+
+        return 0;
+      });
 
       year.months = year.months.sort((a, b) => {
         if(a.month > b.month) {
