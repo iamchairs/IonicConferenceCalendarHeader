@@ -307,7 +307,7 @@ export class IonicConferenceCalendarHeader {
      */
 
     picker.ionChange.subscribe((change) => {
-      if(change.Year.value !== yr) {
+      if(change.Year && change.Year.value !== yr) {
 
         yr = change.Year.value;
 
